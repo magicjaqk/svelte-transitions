@@ -1,0 +1,11 @@
+@import 'tailwindcss';
+
+@layer root {
+	body {
+		@apply bg-slate-700 text-slate-50;
+	}
+
+	hr {
+		@apply my-4 border-t border-slate-500;
+	}
+}
