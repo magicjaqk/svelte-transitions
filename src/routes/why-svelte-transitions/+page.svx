@@ -1,0 +1,7 @@
+# Why Svelte Transitions?
+
+I've seen many projects that use Svelte and third-party animation libraries for transitions and animations; however, I have yet to find a project that uses Svelte's internally provided transition api to create sharable, reusable animations. I'm not sure exactly why this is, but my guess is that the API is assumed to be more complex than it is. In reality, it's very powerful and easy to create configurable transitions for use across many projects. 
+
+## The Basics
+
+Svelte's Transition API operates by performing functions on a provided node/element. These functions can be defined either through JavaScript or compiled to CSS. For the most part, try to opt for CSS-driven animations/transitions because they are significantly more performant and won't be blocked by JavaScript execution threads.
