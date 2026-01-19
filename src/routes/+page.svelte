@@ -1,25 +1,40 @@
 <script lang="ts">
+	import { colorwipe } from '$lib/transitions/colorwipe';
 	import { fadeWipe } from '$lib/transitions/fade-wipe';
 
 	let show = $state(false);
+	let selectedTransition = $state<'colorwipe' | 'fadeWipe'>('colorwipe');
+	let transition = $derived(selectedTransition === 'colorwipe' ? colorwipe : fadeWipe);
 </script>
 
 <main class="container mx-auto p-4 py-20">
 	<button onclick={() => (show = !show)}> Toggle </button>
+	<select bind:value={selectedTransition}>
+		<option value="colorwipe">Colorwipe</option>
+		<option value="fadeWipe">FadeWipe</option>
+	</select>
 
 	<hr />
 
 	<div class="flex items-center justify-between gap-20">
 		{#if show}
-			<div class="box bg-cyan-600 text-cyan-950" transition:fadeWipe>in/out</div>
-			<div class="box bg-cyan-600 text-cyan-950" in:fadeWipe>in</div>
-			<div class="box bg-cyan-600 text-cyan-950" out:fadeWipe>out</div>
+			<div class="box bg-cyan-600 text-cyan-950" in:transition out:transition>in/out</div>
+		{/if}
+		{#if show}
+			<div class="box bg-cyan-600 text-cyan-950" in:transition>in</div>
+		{/if}
+		{#if show}
+			<div class="box bg-cyan-600 text-cyan-950" out:transition>out</div>
 		{/if}
 	</div>
 
 	<div class="mt-16 flex items-center justify-between gap-20">
 		{#if show}
-			<p class="max-w-md" transition:fadeWipe={{ direction: 'to bottom' }}>
+			<p
+				class="max-w-md"
+				in:transition={transition === fadeWipe ? { direction: 'to bottom' } : { axis: 'y' }}
+				out:transition={transition === fadeWipe ? { direction: 'to bottom' } : { axis: 'y' }}
+			>
 				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus
 				tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices
 				diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi. Proin porttitor, orci
