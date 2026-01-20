@@ -16,6 +16,9 @@ const config = {
 		adapter: adapter(),
 		experimental: {
 			remoteFunctions: true
+		},
+		alias: {
+			'@/*': './path/to/lib/*'
 		}
 	},
 	extensions: ['.svelte', '.svx']

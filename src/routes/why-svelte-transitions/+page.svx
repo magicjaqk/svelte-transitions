@@ -5,3 +5,50 @@ I've seen many projects that use Svelte and third-party animation libraries for 
 ## The Basics
 
 Svelte's Transition API operates by performing functions on a provided node/element. These functions can be defined either through JavaScript or compiled to CSS. For the most part, try to opt for CSS-driven animations/transitions because they are significantly more performant and won't be blocked by JavaScript execution threads.
+
+There are default transitions that Svelte provides out of the box. These can be used directly, or used as a template for creating custom transitions. 
+
+The following is the default fade transition:
+
+```ts
+export function fade(node, { delay = 0, duration = 400, easing = linear } = {}) {
+	const o = +getComputedStyle(node).opacity;
+	return {
+		delay,
+		duration,
+		easing,
+		css: (t) => `opacity: ${t * o}`
+	};
+}
+```
+
+The way this function works is by getting the current opacity of the node, then animating it from the current opacity to a new opacity based on the current time elapsed during the transition (`t`). `t` is interpolated between `0` and `1` over the duration of the transition, augmented by the easing function provided.
+
+The function is consumed via the `transition:` directive:
+
+```svelte
+<script>
+	import { fade } from 'svelte/transition';
+</script>
+
+<div transition:fade={{ duration: 500 }}>
+	Hello, world!
+</div>
+```
+
+Now that you understand how Svelte's Transition API fundamentally works, it's pretty easy to see how extensible and portable it is. As a simple example, let's modify the fade transition to include a scale effect:
+
+```ts
+export function scaleFade(node, { delay = 0, duration = 400, easing = linear } = {}) {
+	const opacity = +getComputedStyle(node).opacity; // The `+` converts the returned string to a number
+	const scale = +getComputedStyle(node).scale;
+	return {
+		delay,
+		duration,
+		easing,
+		css: (t) => `opacity: ${t * opacity}; transform: scale(${t * scale});`
+	};
+}
+```
+
+So far, we've only operated in CSS, but what if we need more complex transformations? Maybe the transition needs to access the Svelte `Spring` class.
